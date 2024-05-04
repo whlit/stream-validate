@@ -14,6 +14,7 @@ public class FieldMessage {
     private TypeMessage fieldType;
     private Set<Modifier> modifiers;
     private TypeKind typeKind;
+    private Name getterName;
 
 
     public Name getFieldName() {
@@ -46,5 +47,13 @@ public class FieldMessage {
 
     public void setTypeKind(TypeKind typeKind) {
         this.typeKind = typeKind;
+    }
+
+    public Name getGetterName() {
+        return getterName;
+    }
+
+    public void setGetterName(Name getterName) {
+        this.getterName = getterName;
     }
 }
