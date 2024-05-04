@@ -12,6 +12,7 @@ public enum ResultCode {
 
     private final String code;
     private final String format;
+
     ResultCode(String code, String format) {
         this.code = code;
         this.format = format;

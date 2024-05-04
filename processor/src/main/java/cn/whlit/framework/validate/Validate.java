@@ -7,12 +7,14 @@ public interface Validate<T> {
 
     /**
      * 获取验证对象
+     *
      * @return 验证对象
      */
     T getVal();
 
     /**
      * 获取验证对象路径
+     *
      * @return 验证对象路径
      */
     String getPath();

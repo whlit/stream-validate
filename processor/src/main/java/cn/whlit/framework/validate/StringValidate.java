@@ -54,7 +54,7 @@ public class StringValidate extends AbstractValidate<StringValidate, String> {
 
     public StringValidate notBlank() {
         notNull();
-        if (val.isBlank()){
+        if (val.isBlank()) {
             throw new ArgInvalidException(ResultCode.ARG_NOT_EMPTY, splicingPath(path));
         }
         return this;
@@ -62,7 +62,7 @@ public class StringValidate extends AbstractValidate<StringValidate, String> {
 
     public StringValidate isBlank() {
         notNull();
-        if (val.isBlank()){
+        if (val.isBlank()) {
             return this;
         }
         throw new ArgInvalidException(ResultCode.ARG_MUST_EMPTY, splicingPath(path));

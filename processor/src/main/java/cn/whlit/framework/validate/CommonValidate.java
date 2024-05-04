@@ -3,7 +3,7 @@ package cn.whlit.framework.validate;
 /**
  * @author WangHaiLong 2024/5/3 14:51
  */
-public class CommonValidate extends AbstractValidate<CommonValidate, Object>{
+public class CommonValidate extends AbstractValidate<CommonValidate, Object> {
 
     private final Object val;
 

@@ -3,7 +3,7 @@ package cn.whlit.framework;
 /**
  * @author WangHaiLong 2024/5/3 17:15
  */
-public class ArgInvalidException extends RuntimeException{
+public class ArgInvalidException extends RuntimeException {
 
     private final ResultCode resultCode;
 

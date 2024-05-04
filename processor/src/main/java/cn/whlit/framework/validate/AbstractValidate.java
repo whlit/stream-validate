@@ -14,40 +14,38 @@ public abstract class AbstractValidate<T, E> implements Validate<E> {
 
     public abstract T getSelf();
 
-    public T handle(Consumer<Validate<E>> handler){
+    public T handle(Consumer<Validate<E>> handler) {
         this.handler = handler;
         return getSelf();
     }
 
-    public String splicingPath(String path){
+    public String splicingPath(String path) {
         return getPath() == null || getPath().isBlank() ? path : String.format("%s.%s", getPath(), path);
     }
 
-    public T isNull(){
-        if (getVal() == null){
+    public T isNull() {
+        if (getVal() == null) {
             return getSelf();
         }
-        if (handler != null){
+        if (handler != null) {
             handler.accept(this);
-        }else {
+        } else {
             throw new ArgInvalidException(ResultCode.ARG_MUST_NULL, getPath());
         }
         return getSelf();
     }
 
-    public T notNull(){
-        if (getVal() == null){
+    public T notNull() {
+        if (getVal() == null) {
             return getSelf();
         }
-        if (handler != null){
+        if (handler != null) {
             handler.accept(this);
-        }else {
+        } else {
             throw new ArgInvalidException(ResultCode.ARG_NOT_NULL, getPath());
         }
         return getSelf();
     }
-
-
 
 
 }

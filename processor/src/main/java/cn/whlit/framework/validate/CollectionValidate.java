@@ -8,7 +8,7 @@ import java.util.function.Function;
 /**
  * @author WangHaiLong 2024/5/3 16:15
  */
-public class CollectionValidate<T, E> extends AbstractValidate<CollectionValidate<T, E>, Collection<E>>{
+public class CollectionValidate<T, E> extends AbstractValidate<CollectionValidate<T, E>, Collection<E>> {
 
     private final Collection<E> val;
 
@@ -44,7 +44,7 @@ public class CollectionValidate<T, E> extends AbstractValidate<CollectionValidat
         return path;
     }
 
-    public CollectionValidate<T, E> forEach(Consumer<AbstractValidate<T, E>> consumer){
+    public CollectionValidate<T, E> forEach(Consumer<AbstractValidate<T, E>> consumer) {
         notNull();
         val.forEach(e -> consumer.accept(elementValidate.apply(e)));
         return getSelf();
