@@ -38,7 +38,10 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator notEmpty() {
-        notNull();
+        if (!isValid()){
+            notNull();
+            return this;
+        }
         if (val.isEmpty()) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
@@ -46,7 +49,10 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator isEmpty() {
-        notNull();
+        if (!isValid()){
+            notNull();
+            return this;
+        }
         if (val.isEmpty()) {
             return this;
         }
@@ -55,7 +61,10 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator notBlank() {
-        notNull();
+        if (!isValid()){
+            notNull();
+            return this;
+        }
         if (val.isBlank()) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
@@ -63,7 +72,10 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator isBlank() {
-        notNull();
+        if (!isValid()){
+            notNull();
+            return this;
+        }
         if (val.isBlank()) {
             return this;
         }

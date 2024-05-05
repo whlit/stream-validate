@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 /**
  * @author WangHaiLong 2024/5/4 19:33
  */
-public class LongValidator extends AbstractValidator<LongValidator> {
+public class LongValidator extends NumberValidator<LongValidator, Long> {
 
     private final Long val;
     private final String path;
@@ -21,6 +21,11 @@ public class LongValidator extends AbstractValidator<LongValidator> {
     @Override
     public LongValidator getSelf() {
         return this;
+    }
+
+    @Override
+    int compareTo(Long val) {
+        return this.val.compareTo(val);
     }
 
     @Override

@@ -3,6 +3,7 @@ package cn.whlit.framework.validate;
 import cn.whlit.framework.ResultCode;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author WangHaiLong 2024/5/3 13:39
@@ -22,25 +23,25 @@ public abstract class AbstractValidator<T> implements Validate {
         return getPath() == null || getPath().isBlank() ? path : String.format("%s.%s", getPath(), path);
     }
 
-    void invalid(ResultCode resultCode) {
+    protected void invalid(ResultCode resultCode) {
         handler.accept(resultCode, this);
     }
 
     public T isNull() {
-        if (getVal() == null) {
-            return getSelf();
+        if (isValid()) {
+            invalid(ResultCode.ARG_MUST_NULL);
         }
-        invalid(ResultCode.ARG_MUST_NULL);
         return getSelf();
     }
 
     public T notNull() {
-        if (getVal() != null) {
-            return getSelf();
+        if (!isValid()) {
+            invalid(ResultCode.ARG_NOT_NULL);
         }
-        invalid(ResultCode.ARG_NOT_NULL);
         return getSelf();
     }
-
+    public boolean isValid() {
+        return getVal() != null;
+    }
 
 }

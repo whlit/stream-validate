@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 /**
  * @author WangHaiFloat 2024/5/4 19:33
  */
-public class FloatValidator extends AbstractValidator<FloatValidator> {
+public class FloatValidator extends NumberValidator<FloatValidator, Float> {
 
     private final Float val;
     private final String path;
@@ -31,5 +31,10 @@ public class FloatValidator extends AbstractValidator<FloatValidator> {
     @Override
     public String getPath() {
         return path;
+    }
+
+    @Override
+    int compareTo(Float val) {
+        return this.val.compareTo(val);
     }
 }

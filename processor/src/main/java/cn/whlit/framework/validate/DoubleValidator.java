@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 /**
  * @author WangHaiDouble 2024/5/4 19:33
  */
-public class DoubleValidator extends AbstractValidator<DoubleValidator> {
+public class DoubleValidator extends NumberValidator<DoubleValidator, Double> {
 
     private final Double val;
     private final String path;
@@ -31,5 +31,10 @@ public class DoubleValidator extends AbstractValidator<DoubleValidator> {
     @Override
     public String getPath() {
         return path;
+    }
+
+    @Override
+    int compareTo(Double val) {
+        return this.val.compareTo(val);
     }
 }

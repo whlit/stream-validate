@@ -11,8 +11,8 @@ public class Main {
         Item item = new Item();
         item.setId(1);
         ItemValidators.of(item, (resultCode, validate) -> System.out.println(validate.getPath() + resultCode.getMsg()))
-                .id(integerValidator -> integerValidator.notNull())
-                .name(stringValidator -> stringValidator.isNull())
+                .id(integerValidator -> integerValidator.notNull().smallerThan(10))
+                .name(stringValidator -> stringValidator.notNull().isBlank())
                 .description(stringValidator -> stringValidator.isNull())
                 .status(objectValidator -> objectValidator.isNull())
                 .type(objectValidator -> objectValidator.isNull())

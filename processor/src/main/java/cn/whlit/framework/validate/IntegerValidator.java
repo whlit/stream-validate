@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 /**
  * @author WangHaiLong 2024/5/4 19:33
  */
-public class IntegerValidator extends AbstractValidator<IntegerValidator> {
+public class IntegerValidator extends NumberValidator<IntegerValidator, Integer> {
 
     private final Integer val;
     private final String path;
@@ -24,6 +24,11 @@ public class IntegerValidator extends AbstractValidator<IntegerValidator> {
     }
 
     @Override
+    int compareTo(Integer val) {
+        return this.val.compareTo(val);
+    }
+
+    @Override
     public Integer getVal() {
         return val;
     }
@@ -32,4 +37,5 @@ public class IntegerValidator extends AbstractValidator<IntegerValidator> {
     public String getPath() {
         return path;
     }
+
 }

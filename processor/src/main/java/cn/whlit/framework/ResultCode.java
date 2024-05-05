@@ -8,8 +8,10 @@ public enum ResultCode {
     ARG_MUST_NULL("EA002", "参数必须为NULL"),
     ARG_NOT_EMPTY("EA003", "参数不能为空"),
     ARG_MUST_EMPTY("EA004", "参数必须为空"),
+    ARG_NOT_BIGGER_THAN("EA005", "参数未大于预期值"),
+    ARG_NOT_SMALLER_THAN("EA006", "参数未小于预期值"),
+    ARG_NOT_BETWEEN("EA007", "参数未在预期值之间"),
     ;
-
     private final String code;
     private final String msg;
 
