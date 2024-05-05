@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 public class ClassGenerator {
 
     public static final List<MethodGenerator> methodGenerators = List.of(
-            new IntegerMethodGenerator(),
+            new PrimitiveTypeMethodGenerator(),
             new StringMethodGenerator(),
             new CollectionMethodGenerator()
     );
