@@ -4,7 +4,9 @@ import cn.whlit.framework.generate.ClassGenerator;
 import cn.whlit.framework.parse.TypeParser;
 import cn.whlit.framework.processor.type.TypeMessage;
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.processing.*;
@@ -45,6 +47,7 @@ public class ValidatorProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        getValidatorTypes(annotations, roundEnv);
         for (TypeElement annotation : annotations) {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
 
@@ -66,6 +69,35 @@ public class ValidatorProcessor extends AbstractProcessor {
             }
         }
         return false;
+    }
+
+    private void getValidatorTypes(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        for (TypeElement annotation : annotations) {
+            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
+
+            for (Element element : elements) {
+                Validator validator = element.getAnnotation(Validator.class);
+                if (validator == null) {
+                    continue;
+                }
+                context.setPackageName(context.elementUtils.getPackageOf(element).getQualifiedName().toString());
+                context.setClassNameSuffix(element.getSimpleName().toString());
+                try {
+                    Class<?>[] ignore = validator.value();
+                } catch (MirroredTypesException e) {
+                    List<? extends TypeMirror> typeMirrors = e.getTypeMirrors();
+                    for (TypeMirror typeMirror : typeMirrors) {
+                        TypeName typeName = TypeName.get(typeMirror);
+                        context.getValidatorTypes().put(
+                                typeName,
+                                ClassName.get(context.getPackageName(), String.format("%s%s", ((ClassName) typeName).simpleName(), context.getClassNameSuffix()))
+                        );
+                    }
+                } catch (Exception e) {
+                    context.messager.printMessage(Diagnostic.Kind.WARNING, e.getMessage(), element);
+                }
+            }
+        }
     }
 
     private void processTypeMirrors(List<? extends TypeMirror> typeMirrors, ProcessContext context) {
