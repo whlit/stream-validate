@@ -7,7 +7,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 
-import javax.lang.model.type.TypeKind;
 import java.util.function.Consumer;
 
 /**
@@ -20,14 +19,15 @@ public class StringMethodGenerator implements MethodGenerator {
 
     @Override
     public boolean canGenerate(FieldMessage fieldMessage) {
-        TypeKind typeKind = fieldMessage.getTypeKind();
-        return typeKind == TypeKind.DECLARED &&
-                fieldMessage.getFieldType().getClassName().toString().equals(String.class.getSimpleName());
+        if (fieldMessage.getFieldName() == null || fieldMessage.getGetter() == null) {
+            return false;
+        }
+        return fieldMessage.getFieldType().equals(ClassName.get(String.class));
     }
 
     @Override
     public MethodSpec generate(FieldMessage fieldMessage, ClassName validatorClass, ProcessContext context) {
-        return MethodSpec.methodBuilder(fieldMessage.getFieldName().toString())
+        return MethodSpec.methodBuilder(fieldMessage.getFieldName())
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
                 .beginControlFlow("if (!isValid())")
@@ -35,8 +35,8 @@ public class StringMethodGenerator implements MethodGenerator {
                 .endControlFlow()
                 .addStatement("consumer.accept(new $T(val.$N(), splicingPath($S), handler))",
                         VALIDATOR,
-                        fieldMessage.getGetterName().toString(),
-                        fieldMessage.getFieldName().toString())
+                        fieldMessage.getGetter().getMethodName(),
+                        fieldMessage.getFieldName())
                 .addStatement("return this")
                 .build();
     }

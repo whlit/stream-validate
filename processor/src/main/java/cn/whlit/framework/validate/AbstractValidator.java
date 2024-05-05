@@ -49,7 +49,7 @@ public abstract class AbstractValidator<T> implements Validate {
     }
 
     protected boolean isValid() {
-        if (!preChecked){
+        if (!preChecked) {
             notNull();
         }
         return !isNull;

@@ -1,59 +1,46 @@
 package cn.whlit.framework.processor.type;
 
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
-import javax.lang.model.type.TypeKind;
-import java.util.Set;
+import com.squareup.javapoet.TypeName;
 
 /**
  * @author WangHaiLong 2024/5/4 11:40
  */
 public class FieldMessage {
 
-    private Name fieldName;
-    private TypeMessage fieldType;
-    private Set<Modifier> modifiers;
-    private TypeKind typeKind;
-    private Name getterName;
+    private String fieldName;
+    private TypeName fieldType;
+    private MethodMessage getter;
+    private MethodMessage setter;
 
-
-    public Name getFieldName() {
+    public String getFieldName() {
         return fieldName;
     }
 
-    public void setFieldName(Name fieldName) {
+    public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
-    public TypeMessage getFieldType() {
+    public TypeName getFieldType() {
         return fieldType;
     }
 
-    public void setFieldType(TypeMessage fieldType) {
+    public void setFieldType(TypeName fieldType) {
         this.fieldType = fieldType;
     }
 
-    public Set<Modifier> getModifiers() {
-        return modifiers;
+    public MethodMessage getGetter() {
+        return getter;
     }
 
-    public void setModifiers(Set<Modifier> modifiers) {
-        this.modifiers = modifiers;
+    public void setGetter(MethodMessage getter) {
+        this.getter = getter;
     }
 
-    public TypeKind getTypeKind() {
-        return typeKind;
+    public MethodMessage getSetter() {
+        return setter;
     }
 
-    public void setTypeKind(TypeKind typeKind) {
-        this.typeKind = typeKind;
-    }
-
-    public Name getGetterName() {
-        return getterName;
-    }
-
-    public void setGetterName(Name getterName) {
-        this.getterName = getterName;
+    public void setSetter(MethodMessage setter) {
+        this.setter = setter;
     }
 }

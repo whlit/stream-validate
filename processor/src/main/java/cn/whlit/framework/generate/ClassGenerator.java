@@ -20,14 +20,15 @@ public class ClassGenerator {
     public static final List<MethodGenerator> methodGenerators = List.of(
             new PrimitiveTypeMethodGenerator(),
             new StringMethodGenerator(),
-            new CollectionMethodGenerator()
+            new CollectionMethodGenerator(),
+            new ArrayMethodGenerator(),
+            new ObjectMethodGenerator()
     );
     public static final ObjectMethodGenerator objectMethodGenerator = new ObjectMethodGenerator();
 
     public static TypeSpec generate(ProcessContext context, TypeMessage typeMessage) {
 
-        ClassName valClass = ClassName.get(typeMessage.getPackageName().toString(), typeMessage.getClassName().toString());
-        ClassName validatorClass = ClassName.get("", String.format("%s%s", typeMessage.getClassName().toString(), context.getClassNameSuffix()));
+        ClassName validatorClass = ClassName.get("", String.format("%s%s", ((ClassName) typeMessage.getType()).simpleName(), context.getClassNameSuffix()));
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(validatorClass);
         builder.addModifiers(Modifier.PUBLIC);
@@ -36,15 +37,15 @@ public class ClassGenerator {
         builder.superclass(ParameterizedTypeName.get(ClassName.get(AbstractValidator.class), validatorClass));
 
         // 添加val和path成员变量声明
-        builder.addField(FieldSpec.builder(valClass, "val", Modifier.PRIVATE, Modifier.FINAL).build());
+        builder.addField(FieldSpec.builder(typeMessage.getType(), "val", Modifier.PRIVATE, Modifier.FINAL).build());
         builder.addField(FieldSpec.builder(TypeName.get(String.class), "path", Modifier.PRIVATE, Modifier.FINAL).build());
 
         // 通用方法
-        constructor(valClass, builder);
-        getVal(valClass, builder);
+        constructor(typeMessage.getType(), builder);
+        getVal(typeMessage.getType(), builder);
         getPath(builder);
         getSelf(validatorClass, builder);
-        of(valClass, validatorClass, builder);
+        of(typeMessage.getType(), validatorClass, builder);
 
         // 添加校验对象的成员变量的校验方法
         fieldsMethod(context, typeMessage, validatorClass, builder);
@@ -54,16 +55,17 @@ public class ClassGenerator {
 
     private static void fieldsMethod(ProcessContext context, TypeMessage typeMessage, ClassName validatorClass, TypeSpec.Builder builder) {
         for (FieldMessage field : typeMessage.getFields()) {
-            MethodSpec methodSpec = methodGenerators.stream()
+            methodGenerators.stream()
                     .filter(methodGenerator -> methodGenerator.canGenerate(field))
                     .findFirst()
-                    .orElse(objectMethodGenerator)
-                    .generate(field, validatorClass, context);
-            builder.addMethod(methodSpec);
+                    .ifPresent(methodGenerator -> {
+                        MethodSpec methodSpec = methodGenerator.generate(field, validatorClass, context);
+                        builder.addMethod(methodSpec);
+                    });
         }
     }
 
-    private static void of(ClassName valClass, ClassName validatorClass, TypeSpec.Builder builder) {
+    private static void of(TypeName valClass, ClassName validatorClass, TypeSpec.Builder builder) {
         MethodSpec of = MethodSpec.methodBuilder("of")
                 .addParameter(valClass, "val")
                 .addParameter(ParameterizedTypeName.get(ClassName.get(BiConsumer.class), ClassName.get(ResultCode.class), ClassName.get(Validate.class)), "handler")
@@ -74,7 +76,7 @@ public class ClassGenerator {
         builder.addMethod(of);
     }
 
-    private static void getSelf(ClassName validatorClass, TypeSpec.Builder builder) {
+    private static void getSelf(TypeName validatorClass, TypeSpec.Builder builder) {
         MethodSpec getSelf = MethodSpec.methodBuilder("getSelf")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)
@@ -94,7 +96,7 @@ public class ClassGenerator {
         builder.addMethod(getPath);
     }
 
-    private static void getVal(ClassName valClass, TypeSpec.Builder builder) {
+    private static void getVal(TypeName valClass, TypeSpec.Builder builder) {
         MethodSpec getVal = MethodSpec.methodBuilder("getVal")
                 .addStatement("return val")
                 .returns(valClass)
@@ -104,7 +106,7 @@ public class ClassGenerator {
         builder.addMethod(getVal);
     }
 
-    private static void constructor(ClassName valClass, TypeSpec.Builder builder) {
+    private static void constructor(TypeName valClass, TypeSpec.Builder builder) {
         MethodSpec constructor = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(valClass, "val")

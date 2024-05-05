@@ -10,6 +10,8 @@ public class Item {
 
     private Integer id;
 
+    private int age;
+
     private Long number;
 
     private String name;

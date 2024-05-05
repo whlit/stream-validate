@@ -19,12 +19,12 @@ public class ObjectMethodGenerator implements MethodGenerator {
 
     @Override
     public boolean canGenerate(FieldMessage fieldMessage) {
-        return true;
+        return fieldMessage.getFieldName() != null && fieldMessage.getGetter() != null;
     }
 
     @Override
     public MethodSpec generate(FieldMessage fieldMessage, ClassName validatorClass, ProcessContext context) {
-        return MethodSpec.methodBuilder(fieldMessage.getFieldName().toString())
+        return MethodSpec.methodBuilder(fieldMessage.getFieldName())
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
                 .beginControlFlow("if (!isValid())")
@@ -32,8 +32,8 @@ public class ObjectMethodGenerator implements MethodGenerator {
                 .endControlFlow()
                 .addStatement("consumer.accept(new $T(val.$N(), splicingPath($S), handler))",
                         VALIDATOR,
-                        fieldMessage.getGetterName().toString(),
-                        fieldMessage.getFieldName().toString())
+                        fieldMessage.getGetter().getMethodName(),
+                        fieldMessage.getFieldName())
                 .addStatement("return this")
                 .build();
     }
