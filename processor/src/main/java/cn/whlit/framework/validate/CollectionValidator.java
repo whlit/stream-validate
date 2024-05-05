@@ -27,7 +27,7 @@ public class CollectionValidator<T, E> extends AbstractValidator<CollectionValid
 
     public CollectionValidator(E[] val, String path, BiConsumer<ResultCode, Validate> handler, BiFunction<E, String, T> createSubValidator) {
         super(handler);
-        this.val = Arrays.asList(val);
+        this.val = val == null ? null : Arrays.asList(val);
         this.path = path;
         this.createSubValidator = createSubValidator;
     }
@@ -49,12 +49,22 @@ public class CollectionValidator<T, E> extends AbstractValidator<CollectionValid
 
     public CollectionValidator<T, E> forEach(Consumer<T> consumer) {
         if (!isValid()) {
-            return getSelf();
+            return this;
         }
         AtomicInteger i = new AtomicInteger();
         val.forEach(item -> consumer.accept(createSubValidator.apply(item, String.format("%s[%d]", path, i.getAndIncrement()))));
         return this;
     }
 
+    @Override
+    public CollectionValidator<T, E> notNull() {
+        super.notNull();
+        return this;
+    }
 
+    @Override
+    public CollectionValidator<T, E> isNull() {
+        super.isNull();
+        return this;
+    }
 }
