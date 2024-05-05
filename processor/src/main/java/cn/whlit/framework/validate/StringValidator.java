@@ -12,7 +12,7 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     private final String val;
     private final String path;
 
-    protected StringValidator(String val, String path, BiConsumer<ResultCode, Validate> handler) {
+    public StringValidator(String val, String path, BiConsumer<ResultCode, Validate> handler) {
         super(handler);
         this.val = val;
         this.path = path;

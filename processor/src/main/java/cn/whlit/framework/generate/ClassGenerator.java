@@ -5,8 +5,6 @@ import cn.whlit.framework.processor.ProcessContext;
 import cn.whlit.framework.processor.type.FieldMessage;
 import cn.whlit.framework.processor.type.TypeMessage;
 import cn.whlit.framework.validate.AbstractValidator;
-import cn.whlit.framework.validate.CollectionValidator;
-import cn.whlit.framework.validate.ObjectValidator;
 import cn.whlit.framework.validate.Validate;
 import com.squareup.javapoet.*;
 
@@ -19,13 +17,12 @@ import java.util.function.BiConsumer;
  */
 public class ClassGenerator {
 
-    private static final ClassName commonValidator = ClassName.get(ObjectValidator.class);
-    private static final ClassName collectionValidator = ClassName.get(CollectionValidator.class);
-    private static final ClassName abstractValidator = ClassName.get(AbstractValidator.class);
-    private static final ClassName stringValidate = ClassName.get(ObjectValidator.class);
-
-
-    public static final List<MethodGenerator> methodGenerators = List.of(new IntegerMethodGenerator());
+    public static final List<MethodGenerator> methodGenerators = List.of(
+            new IntegerMethodGenerator(),
+            new StringMethodGenerator(),
+            new CollectionMethodGenerator()
+    );
+    public static final ObjectMethodGenerator objectMethodGenerator = new ObjectMethodGenerator();
 
     public static TypeSpec generate(ProcessContext context, TypeMessage typeMessage) {
 
@@ -34,12 +31,80 @@ public class ClassGenerator {
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(validatorClass);
         builder.addModifiers(Modifier.PUBLIC);
+
+        //添加父类
         builder.superclass(ParameterizedTypeName.get(ClassName.get(AbstractValidator.class), validatorClass));
 
+        // 添加val和path成员变量声明
         builder.addField(FieldSpec.builder(valClass, "val", Modifier.PRIVATE, Modifier.FINAL).build());
         builder.addField(FieldSpec.builder(TypeName.get(String.class), "path", Modifier.PRIVATE, Modifier.FINAL).build());
 
+        // 通用方法
+        constructor(valClass, builder);
+        getVal(valClass, builder);
+        getPath(builder);
+        getSelf(validatorClass, builder);
+        of(valClass, validatorClass, builder);
 
+        // 添加校验对象的成员变量的校验方法
+        fieldsMethod(context, typeMessage, validatorClass, builder);
+
+        return builder.build();
+    }
+
+    private static void fieldsMethod(ProcessContext context, TypeMessage typeMessage, ClassName validatorClass, TypeSpec.Builder builder) {
+        for (FieldMessage field : typeMessage.getFields()) {
+            MethodSpec methodSpec = methodGenerators.stream()
+                    .filter(methodGenerator -> methodGenerator.canGenerate(field))
+                    .findFirst()
+                    .orElse(objectMethodGenerator)
+                    .generate(field, validatorClass, context);
+            builder.addMethod(methodSpec);
+        }
+    }
+
+    private static void of(ClassName valClass, ClassName validatorClass, TypeSpec.Builder builder) {
+        MethodSpec of = MethodSpec.methodBuilder("of")
+                .addParameter(valClass, "val")
+                .addParameter(ParameterizedTypeName.get(ClassName.get(BiConsumer.class), ClassName.get(ResultCode.class), ClassName.get(Validate.class)), "handler")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(validatorClass)
+                .addStatement("return new $T(val, \"\", handler)", validatorClass)
+                .build();
+        builder.addMethod(of);
+    }
+
+    private static void getSelf(ClassName validatorClass, TypeSpec.Builder builder) {
+        MethodSpec getSelf = MethodSpec.methodBuilder("getSelf")
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .returns(validatorClass)
+                .addStatement("return this")
+                .build();
+        builder.addMethod(getSelf);
+    }
+
+    private static void getPath(TypeSpec.Builder builder) {
+        MethodSpec getPath = MethodSpec.methodBuilder("getPath")
+                .addStatement("return path")
+                .returns(TypeName.get(String.class))
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .build();
+        builder.addMethod(getPath);
+    }
+
+    private static void getVal(ClassName valClass, TypeSpec.Builder builder) {
+        MethodSpec getVal = MethodSpec.methodBuilder("getVal")
+                .addStatement("return val")
+                .returns(valClass)
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .build();
+        builder.addMethod(getVal);
+    }
+
+    private static void constructor(ClassName valClass, TypeSpec.Builder builder) {
         MethodSpec constructor = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(valClass, "val")
@@ -50,49 +115,5 @@ public class ClassGenerator {
                 .addStatement("this.path = path")
                 .build();
         builder.addMethod(constructor);
-
-        MethodSpec getVal = MethodSpec.methodBuilder("getVal")
-                .addStatement("return val")
-                .returns(valClass)
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .build();
-        builder.addMethod(getVal);
-
-        MethodSpec getPath = MethodSpec.methodBuilder("getPath")
-                .addStatement("return path")
-                .returns(TypeName.get(String.class))
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .build();
-        builder.addMethod(getPath);
-
-        MethodSpec getSelf = MethodSpec.methodBuilder("getSelf")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(validatorClass)
-                .addStatement("return this")
-                .build();
-        builder.addMethod(getSelf);
-
-        MethodSpec of = MethodSpec.methodBuilder("of")
-                .addParameter(valClass, "val")
-                .addParameter(ParameterizedTypeName.get(ClassName.get(BiConsumer.class), ClassName.get(ResultCode.class), ClassName.get(Validate.class)), "handler")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .returns(validatorClass)
-                .addStatement("return new $T(val, \"\", handler)", validatorClass)
-                .build();
-        builder.addMethod(of);
-
-        for (FieldMessage field : typeMessage.getFields()) {
-            methodGenerators.forEach(methodGenerator -> {
-                if (methodGenerator.canGenerate(field)) {
-                    MethodSpec methodSpec = methodGenerator.generate(field, validatorClass, context);
-                    builder.addMethod(methodSpec);
-                }
-            });
-        }
-
-        return builder.build();
     }
 }

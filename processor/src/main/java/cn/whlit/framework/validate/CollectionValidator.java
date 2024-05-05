@@ -13,7 +13,7 @@ public class CollectionValidator<T, E> extends AbstractValidator<CollectionValid
     private final Collection<E> val;
     private final String path;
 
-    protected CollectionValidator(Collection<E> val, String path, BiConsumer<ResultCode, Validate> handler) {
+    public CollectionValidator(Collection<E> val, String path, BiConsumer<ResultCode, Validate> handler) {
         super(handler);
         this.val = val;
         this.path = path;
