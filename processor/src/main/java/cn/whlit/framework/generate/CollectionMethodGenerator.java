@@ -46,6 +46,9 @@ public class CollectionMethodGenerator implements MethodGenerator {
         return MethodSpec.methodBuilder(fieldMessage.getFieldName().toString())
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
+                .beginControlFlow("if (!isValid())")
+                .addStatement("return getSelf()")
+                .endControlFlow()
                 .addStatement("consumer.accept(new $T(val.$N(), splicingPath($S), handler))",
                         VALIDATOR,
                         fieldMessage.getGetterName().toString(),

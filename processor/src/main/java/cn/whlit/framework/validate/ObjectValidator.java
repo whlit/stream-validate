@@ -23,6 +23,11 @@ public class ObjectValidator extends AbstractValidator<ObjectValidator> {
     }
 
     @Override
+    protected ObjectValidator getSelf() {
+        return this;
+    }
+
+    @Override
     public Object getVal() {
         return val;
     }
@@ -30,11 +35,6 @@ public class ObjectValidator extends AbstractValidator<ObjectValidator> {
     @Override
     public String getPath() {
         return path;
-    }
-
-    @Override
-    public ObjectValidator getSelf() {
-        return this;
     }
 
 }

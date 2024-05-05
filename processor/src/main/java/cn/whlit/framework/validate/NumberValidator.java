@@ -13,12 +13,12 @@ public abstract class NumberValidator<T, N extends Number> extends AbstractValid
         super(handler);
     }
 
-    @Override
-    public abstract T getSelf();
+    protected abstract T getSelf();
+
+    abstract int compareTo(N val);
 
     public T biggerThan(N val) {
         if (!isValid()){
-            notNull();
             return getSelf();
         }
         if (compareTo(val) <= 0) {
@@ -29,7 +29,6 @@ public abstract class NumberValidator<T, N extends Number> extends AbstractValid
 
     public T smallerThan(N val) {
         if (!isValid()){
-            notNull();
             return getSelf();
         }
         if (compareTo(val) >= 0) {
@@ -40,7 +39,6 @@ public abstract class NumberValidator<T, N extends Number> extends AbstractValid
 
     public T between(N start, N end) {
         if (!isValid()){
-            notNull();
             return getSelf();
         }
         if (compareTo(start) < 0 || compareTo(end) > 0) {
@@ -48,7 +46,5 @@ public abstract class NumberValidator<T, N extends Number> extends AbstractValid
         }
         return getSelf();
     }
-
-    abstract int compareTo(N val);
 
 }

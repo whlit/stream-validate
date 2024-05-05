@@ -19,7 +19,7 @@ public class CharacterValidator extends AbstractValidator<CharacterValidator> {
     }
 
     @Override
-    public CharacterValidator getSelf() {
+    protected CharacterValidator getSelf() {
         return this;
     }
 

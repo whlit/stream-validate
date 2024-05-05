@@ -19,7 +19,7 @@ public class ShortValidator extends AbstractValidator<ShortValidator> {
     }
 
     @Override
-    public ShortValidator getSelf() {
+    protected ShortValidator getSelf() {
         return this;
     }
 

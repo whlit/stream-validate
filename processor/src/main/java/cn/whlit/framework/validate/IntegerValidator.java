@@ -19,7 +19,7 @@ public class IntegerValidator extends NumberValidator<IntegerValidator, Integer>
     }
 
     @Override
-    public IntegerValidator getSelf() {
+    protected IntegerValidator getSelf() {
         return this;
     }
 

@@ -19,7 +19,7 @@ public class ByteValidator extends AbstractValidator<ByteValidator> {
     }
 
     @Override
-    public ByteValidator getSelf() {
+    protected ByteValidator getSelf() {
         return this;
     }
 

@@ -19,7 +19,7 @@ public class BooleanValidator extends AbstractValidator<BooleanValidator> {
     }
 
     @Override
-    public BooleanValidator getSelf() {
+    protected BooleanValidator getSelf() {
         return this;
     }
 

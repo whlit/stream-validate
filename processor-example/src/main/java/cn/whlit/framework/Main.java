@@ -12,7 +12,7 @@ public class Main {
         item.setId(1);
         ItemValidators.of(item, (resultCode, validate) -> System.out.println(validate.getPath() + resultCode.getMsg()))
                 .id(integerValidator -> integerValidator.notNull().smallerThan(10))
-                .name(stringValidator -> stringValidator.notNull().isBlank())
+                .name(stringValidator -> stringValidator.notNull().isBlank().isBlank())
                 .description(stringValidator -> stringValidator.isNull())
                 .status(objectValidator -> objectValidator.isNull())
                 .type(objectValidator -> objectValidator.isNull())

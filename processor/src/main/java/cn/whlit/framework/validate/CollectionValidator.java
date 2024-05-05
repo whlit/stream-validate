@@ -20,7 +20,7 @@ public class CollectionValidator<T, E> extends AbstractValidator<CollectionValid
     }
 
     @Override
-    public CollectionValidator<T, E> getSelf() {
+    protected CollectionValidator<T, E> getSelf() {
         return this;
     }
 

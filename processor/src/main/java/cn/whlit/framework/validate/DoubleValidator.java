@@ -19,7 +19,7 @@ public class DoubleValidator extends NumberValidator<DoubleValidator, Double> {
     }
 
     @Override
-    public DoubleValidator getSelf() {
+    protected DoubleValidator getSelf() {
         return this;
     }
 

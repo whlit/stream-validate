@@ -27,7 +27,7 @@ public class ClassGenerator {
     public static TypeSpec generate(ProcessContext context, TypeMessage typeMessage) {
 
         ClassName valClass = ClassName.get(typeMessage.getPackageName().toString(), typeMessage.getClassName().toString());
-        ClassName validatorClass = ClassName.get("", String.format("%s%s", typeMessage.getClassName().toString(), context.className));
+        ClassName validatorClass = ClassName.get("", String.format("%s%s", typeMessage.getClassName().toString(), context.getClassNameSuffix()));
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(validatorClass);
         builder.addModifiers(Modifier.PUBLIC);

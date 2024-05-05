@@ -19,7 +19,7 @@ public class LongValidator extends NumberValidator<LongValidator, Long> {
     }
 
     @Override
-    public LongValidator getSelf() {
+    protected LongValidator getSelf() {
         return this;
     }
 

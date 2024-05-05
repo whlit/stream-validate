@@ -20,7 +20,7 @@ public class DateValidator extends AbstractValidator<DateValidator> {
     }
 
     @Override
-    public DateValidator getSelf() {
+    protected DateValidator getSelf() {
         return this;
     }
 

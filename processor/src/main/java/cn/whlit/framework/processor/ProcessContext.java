@@ -12,16 +12,28 @@ public class ProcessContext {
     public final Elements elementUtils;
     public final Types typeUtils;
     public final Messager messager;
-    public final String packageName;
-    public final String className;
+    private String packageName;
+    private String classNameSuffix;
 
-    public ProcessContext(Elements elementUtils, Types typeUtils, Messager messager, String packageName, String className) {
+    public ProcessContext(Elements elementUtils, Types typeUtils, Messager messager) {
         this.elementUtils = elementUtils;
         this.typeUtils = typeUtils;
         this.messager = messager;
-        this.packageName = packageName;
-        this.className = className;
     }
 
+    public String getPackageName() {
+        return packageName;
+    }
 
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getClassNameSuffix() {
+        return classNameSuffix;
+    }
+
+    public void setClassNameSuffix(String classNameSuffix) {
+        this.classNameSuffix = classNameSuffix;
+    }
 }

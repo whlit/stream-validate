@@ -19,7 +19,7 @@ public class FloatValidator extends NumberValidator<FloatValidator, Float> {
     }
 
     @Override
-    public FloatValidator getSelf() {
+    protected FloatValidator getSelf() {
         return this;
     }
 

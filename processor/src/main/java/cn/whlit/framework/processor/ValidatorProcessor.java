@@ -29,19 +29,20 @@ import java.util.Set;
 public class ValidatorProcessor extends AbstractProcessor {
 
     private Filer filer;
-    private Elements elementUtils;
-    private Types typeUtils;
-    private Messager messager;
+    private ProcessContext context;
 
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         filer = processingEnv.getFiler();
-        elementUtils = processingEnv.getElementUtils();
-        typeUtils = processingEnv.getTypeUtils();
-        messager = processingEnv.getMessager();
+        context = new ProcessContext(processingEnv.getElementUtils(), processingEnv.getTypeUtils(), processingEnv.getMessager());
 
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
     }
 
     @Override
@@ -54,31 +55,35 @@ public class ValidatorProcessor extends AbstractProcessor {
                 if (validator == null) {
                     continue;
                 }
-                ProcessContext context = new ProcessContext(elementUtils, typeUtils, messager,
-                        elementUtils.getPackageOf(element).getQualifiedName().toString(),
-                        element.getSimpleName().toString());
+                context.setPackageName(context.elementUtils.getPackageOf(element).getQualifiedName().toString());
+                context.setClassNameSuffix(element.getSimpleName().toString());
                 try {
                     Class<?>[] ignore = validator.value();
                 } catch (MirroredTypesException e) {
                     List<? extends TypeMirror> typeMirrors = e.getTypeMirrors();
-                    for (TypeMirror typeMirror : typeMirrors) {
-                        TypeMessage typeMessage = TypeParser.parse(context, typeMirror);
-                        if (typeMessage != null) {
-                            TypeSpec typeSpec = ClassGenerator.generate(context, typeMessage);
-                            JavaFile javaFile = JavaFile.builder(context.packageName, typeSpec).build();
-                            try {
-                                javaFile.writeTo(filer);
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        }
-                    }
+                    processTypeMirrors(typeMirrors, context);
                 } catch (Exception e) {
                     context.messager.printMessage(Diagnostic.Kind.WARNING, e.getMessage(), element);
                 }
-
             }
         }
         return false;
     }
+
+    private void processTypeMirrors(List<? extends TypeMirror> typeMirrors, ProcessContext context) {
+        for (TypeMirror typeMirror : typeMirrors) {
+            TypeMessage typeMessage = TypeParser.parse(context, typeMirror);
+            if (typeMessage != null) {
+                TypeSpec typeSpec = ClassGenerator.generate(context, typeMessage);
+                JavaFile javaFile = JavaFile.builder(context.getPackageName(), typeSpec).build();
+                try {
+                    javaFile.writeTo(filer);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+    }
+
+
 }
