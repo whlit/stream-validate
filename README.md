@@ -223,3 +223,16 @@ public class Main {
     }
 }
 ```
+
+<details>
+
+<summary>校验结果</summary>
+
+```
+result: 参数不能为NULL, path: [children[0].id], value: null
+result: 参数不能为NULL, path: [children[0].name], value: null
+result: 参数不能为空, path: [children[0].name], value: null
+result: 参数不能为NULL, path: [tags], value: null
+```
+
+</details>

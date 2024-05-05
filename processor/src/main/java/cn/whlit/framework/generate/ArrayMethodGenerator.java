@@ -4,10 +4,7 @@ import cn.whlit.framework.processor.ProcessContext;
 import cn.whlit.framework.processor.type.FieldMessage;
 import cn.whlit.framework.validate.CollectionValidator;
 import cn.whlit.framework.validate.ObjectValidator;
-import com.squareup.javapoet.ArrayTypeName;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.*;
 
 import java.util.function.Consumer;
 
@@ -17,7 +14,6 @@ import java.util.function.Consumer;
 public class ArrayMethodGenerator implements MethodGenerator {
 
     private static final ClassName VALIDATOR = ClassName.get(CollectionValidator.class);
-    private static final ParameterizedTypeName CONSUMER = ParameterizedTypeName.get(ClassName.get(Consumer.class), ClassName.get(CollectionValidator.class));
 
     @Override
     public boolean canGenerate(FieldMessage fieldMessage) {
@@ -32,6 +28,16 @@ public class ArrayMethodGenerator implements MethodGenerator {
     @Override
     public MethodSpec generate(FieldMessage fieldMessage, ClassName validatorClass, ProcessContext context) {
         ArrayTypeName fieldType = (ArrayTypeName) fieldMessage.getFieldType();
+        TypeName subType = fieldType.componentType.isPrimitive() ? fieldType.componentType.box() : fieldType.componentType;
+        TypeName subTypeValidator = context.getValidatorTypes().getOrDefault(subType, ClassName.get(ObjectValidator.class));
+        ParameterizedTypeName CONSUMER = ParameterizedTypeName.get(
+                ClassName.get(Consumer.class),
+                ParameterizedTypeName.get(
+                        VALIDATOR,
+                        subTypeValidator,
+                        subType
+                )
+        );
         return MethodSpec.methodBuilder(fieldMessage.getFieldName())
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
@@ -40,11 +46,11 @@ public class ArrayMethodGenerator implements MethodGenerator {
                 .endControlFlow()
                 .addStatement("consumer.accept(new $T<$T, $T>(val.$N(), splicingPath($S), handler, (e, p) -> new $T(e, p, handler)))",
                         VALIDATOR,
-                        ClassName.get(ObjectValidator.class),
+                        subTypeValidator,
                         fieldType.componentType.isPrimitive() ? fieldType.componentType.box() : fieldType.componentType,
                         fieldMessage.getGetter().getMethodName(),
                         fieldMessage.getFieldName(),
-                        ClassName.get(ObjectValidator.class))
+                        subTypeValidator)
                 .addStatement("return this")
                 .build();
     }
