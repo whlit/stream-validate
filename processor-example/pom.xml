@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.whlit.framework</groupId>
-        <artifactId>stream-validate</artifactId>
+        <artifactId>stream-validate-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.whlit.framework</groupId>
-            <artifactId>processor</artifactId>
+            <artifactId>stream-validate</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
