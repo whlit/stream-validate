@@ -7,6 +7,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.element.Modifier;
 import java.util.function.Consumer;
 
 /**
@@ -27,6 +28,7 @@ public class PrimitiveTypeMethodGenerator implements MethodGenerator {
         TypeName VALIDATOR = context.getValidatorTypes().get(fieldMessage.getFieldType());
         ParameterizedTypeName CONSUMER = ParameterizedTypeName.get(ClassName.get(Consumer.class), VALIDATOR);
         return MethodSpec.methodBuilder(fieldMessage.getFieldName())
+                .addModifiers(Modifier.PUBLIC)
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
                 .beginControlFlow("if (!isValid())")

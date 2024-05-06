@@ -6,6 +6,7 @@ import cn.whlit.framework.validate.CollectionValidator;
 import cn.whlit.framework.validate.ObjectValidator;
 import com.squareup.javapoet.*;
 
+import javax.lang.model.element.Modifier;
 import java.util.function.Consumer;
 
 /**
@@ -39,6 +40,7 @@ public class ArrayMethodGenerator implements MethodGenerator {
                 )
         );
         return MethodSpec.methodBuilder(fieldMessage.getFieldName())
+                .addModifiers(Modifier.PUBLIC)
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
                 .beginControlFlow("if (!isValid())")

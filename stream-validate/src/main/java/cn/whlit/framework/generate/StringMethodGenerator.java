@@ -7,6 +7,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 
+import javax.lang.model.element.Modifier;
 import java.util.function.Consumer;
 
 /**
@@ -28,6 +29,7 @@ public class StringMethodGenerator implements MethodGenerator {
     @Override
     public MethodSpec generate(FieldMessage fieldMessage, ClassName validatorClass, ProcessContext context) {
         return MethodSpec.methodBuilder(fieldMessage.getFieldName())
+                .addModifiers(Modifier.PUBLIC)
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
                 .beginControlFlow("if (!isValid())")
