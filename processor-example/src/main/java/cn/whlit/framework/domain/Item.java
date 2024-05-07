@@ -1,12 +1,15 @@
 package cn.whlit.framework.domain;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * @author WangHaiLong 2024/5/3 17:43
  */
 public class Item {
+
+    public Item genName(String... name) {
+        return null;
+    }
 
     private Integer id;
 

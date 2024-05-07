@@ -1,8 +1,8 @@
 package cn.whlit.framework;
 
 import cn.whlit.framework.domain.Item;
-
-import java.util.List;
+import cn.whlit.framework.validate.AbstractValidator;
+import cn.whlit.framework.validate.StringValidator;
 
 /**
  * @author WangHaiLong 2024/5/4 18:37
@@ -17,12 +17,12 @@ public class Main {
 
         ItemValidators.of(item, (resultCode, validate) -> {
                     // 处理结果，只要是不符合的情况都会调用这个处理逻辑
-                    System.out.println(String.format("result: %s, path: [%s], value: %s",
-                            resultCode.getMsg(), validate.getPath(), validate.getVal()));
+                    System.out.printf("result: %s, path: [%s], value: %s%n",
+                            resultCode.getMsg(), validate.getPath(), validate.getVal());
                 })
                 // 校验item本身的属性
-                .id(id -> id.notNull())
-                .name(name -> name.notEmpty())
+                .id(AbstractValidator::notNull)
+                .name(name -> name.notEmpty().notEmpty())
                 // 校验集合类型的属性
                 .children(children ->
                         // 集合类型这个属性本身的校验
@@ -30,14 +30,16 @@ public class Main {
                                 // 使用forEach遍历集合的每一个元素，消费的元素为集合元素对应的校验器
                                 .forEach(childItem ->
                                         childItem.notNull()
-                                                .id(id -> id.notNull())
-                                                .name(name -> name.notEmpty())
+                                                .id(AbstractValidator::notNull)
+                                                .name(StringValidator::notEmpty)
                                 )
                 ).tags(tags ->
                         tags.notNull()
-                                .forEach(tag ->
-                                        tag.notEmpty()
+                                .forEach(StringValidator::notEmpty
                                 )
+                ).number(number ->
+                        number.notNull()
+                                .biggerThan(0L)
                 );
     }
 }

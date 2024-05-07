@@ -3,12 +3,14 @@ package cn.whlit.framework.parse;
 import cn.whlit.framework.processor.ProcessContext;
 import cn.whlit.framework.processor.type.FieldMessage;
 import cn.whlit.framework.processor.type.MethodMessage;
+import cn.whlit.framework.processor.type.ParamMessage;
 import cn.whlit.framework.processor.type.TypeMessage;
 import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,16 @@ public class TypeParser {
         MethodMessage methodMessage = new MethodMessage();
         methodMessage.setMethodName(method.getSimpleName().toString());
         methodMessage.setMethodReturnType(TypeName.get(method.getReturnType()));
+        List<? extends VariableElement> parameters = method.getParameters();
+        methodMessage.setMethodParameters(new ArrayList<>());
+        for (int i = 0; i < parameters.size(); i++) {
+            ParamMessage paramMessage = new ParamMessage();
+            VariableElement parameter = parameters.get(i);
+            paramMessage.setParamName(parameter.getSimpleName().toString());
+            paramMessage.setParamType(TypeName.get(parameter.asType()));
+            paramMessage.setParamIndex(i);
+            methodMessage.getMethodParameters().add(paramMessage);
+        }
         return methodMessage;
     }
 

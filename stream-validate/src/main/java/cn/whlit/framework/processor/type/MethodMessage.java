@@ -11,7 +11,7 @@ public class MethodMessage {
 
     private String methodName;
     private TypeName methodReturnType;
-    private List<FieldMessage> methodParameters;
+    private List<ParamMessage> methodParameters;
 
     public String getMethodName() {
         return methodName;
@@ -29,11 +29,11 @@ public class MethodMessage {
         this.methodReturnType = methodReturnType;
     }
 
-    public List<FieldMessage> getMethodParameters() {
+    public List<ParamMessage> getMethodParameters() {
         return methodParameters;
     }
 
-    public void setMethodParameters(List<FieldMessage> methodParameters) {
+    public void setMethodParameters(List<ParamMessage> methodParameters) {
         this.methodParameters = methodParameters;
     }
 }

@@ -6,7 +6,6 @@
 
 新建一个类或者接口，在类或者接口上添加@Validator注解，注解中添加需要校验的类，编译后会自动生成以校验类为前缀，以被注解的类名为后缀的校验类，
 
-
 ``` java [配置类]
 package cn.whlit.framework;
 
@@ -18,7 +17,6 @@ public interface Validators {
 
 }
 ```
-
 
 <details>
 
@@ -86,7 +84,8 @@ public class Item {
 
 </details>
 
-生成的类是位于项目的target/generated-sources/annotations目录下，包名是被注解的类所在包名，可以添加多个被注解的类进行配置，需要校验的类只能在一个`@Validator`注解中配置，重复配置可能生成的类会出现不可预料的错误。
+生成的类是位于项目的target/generated-sources/annotations目录下，包名是被注解的类所在包名，可以添加多个被注解的类进行配置，需要校验的类只能在一个`@Validator`
+注解中配置，重复配置可能生成的类会出现不可预料的错误。
 
 <details>
 
@@ -182,7 +181,6 @@ public class ItemValidators extends AbstractValidator<ItemValidators> {
 ```
 
 </details>
-
 
 - 使用校验类
 
