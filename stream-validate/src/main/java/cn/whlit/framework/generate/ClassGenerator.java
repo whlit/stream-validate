@@ -9,6 +9,7 @@ import cn.whlit.framework.validate.Validate;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -17,14 +18,16 @@ import java.util.function.BiConsumer;
  */
 public class ClassGenerator {
 
-    public static final List<MethodGenerator> methodGenerators = List.of(
-            new PrimitiveTypeMethodGenerator(),
-            new StringMethodGenerator(),
-            new CollectionMethodGenerator(),
-            new ArrayMethodGenerator(),
-            new ObjectMethodGenerator()
-    );
+    public static final List<MethodGenerator> methodGenerators = new ArrayList<>();
     public static final ObjectMethodGenerator objectMethodGenerator = new ObjectMethodGenerator();
+
+    static {
+        methodGenerators.add(new PrimitiveTypeMethodGenerator());
+        methodGenerators.add(new StringMethodGenerator());
+        methodGenerators.add(new CollectionMethodGenerator());
+        methodGenerators.add(new ArrayMethodGenerator());
+        methodGenerators.add(new ObjectMethodGenerator());
+    }
 
     public static TypeSpec generate(ProcessContext context, TypeMessage typeMessage) {
 

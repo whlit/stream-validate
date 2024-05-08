@@ -20,21 +20,23 @@ import java.util.function.Consumer;
 public class CollectionMethodGenerator implements MethodGenerator {
 
     private static final ClassName VALIDATOR = ClassName.get(CollectionValidator.class);
-    private static final List<ClassName> SUPPORT_TYPE = List.of(
-            ClassName.get(Collection.class),
-            ClassName.get(List.class),
-            ClassName.get(ArrayList.class),
-            ClassName.get(LinkedList.class),
-            ClassName.get(Vector.class),
-            ClassName.get(Stack.class),
-            ClassName.get(CopyOnWriteArrayList.class),
-            ClassName.get(Set.class),
-            ClassName.get(HashSet.class),
-            ClassName.get(LinkedHashSet.class),
-            ClassName.get(TreeSet.class),
-            ClassName.get(SortedSet.class),
-            ClassName.get(EnumSet.class)
-    );
+    private static final List<ClassName> SUPPORT_TYPE = new ArrayList<>();
+
+    static {
+        SUPPORT_TYPE.add(ClassName.get(Collection.class));
+        SUPPORT_TYPE.add(ClassName.get(List.class));
+        SUPPORT_TYPE.add(ClassName.get(ArrayList.class));
+        SUPPORT_TYPE.add(ClassName.get(LinkedList.class));
+        SUPPORT_TYPE.add(ClassName.get(Vector.class));
+        SUPPORT_TYPE.add(ClassName.get(Stack.class));
+        SUPPORT_TYPE.add(ClassName.get(CopyOnWriteArrayList.class));
+        SUPPORT_TYPE.add(ClassName.get(Set.class));
+        SUPPORT_TYPE.add(ClassName.get(HashSet.class));
+        SUPPORT_TYPE.add(ClassName.get(LinkedHashSet.class));
+        SUPPORT_TYPE.add(ClassName.get(TreeSet.class));
+        SUPPORT_TYPE.add(ClassName.get(SortedSet.class));
+        SUPPORT_TYPE.add(ClassName.get(EnumSet.class));
+    }
 
     @Override
     public boolean canGenerate(FieldMessage fieldMessage) {

@@ -1,6 +1,7 @@
 package cn.whlit.framework.validate;
 
 import cn.whlit.framework.ResultCode;
+import cn.whlit.framework.util.StringUtils;
 
 import java.util.function.BiConsumer;
 
@@ -21,7 +22,7 @@ public abstract class AbstractValidator<T> implements Validate {
     protected abstract T getSelf();
 
     protected String splicingPath(String path) {
-        return getPath() == null || getPath().isBlank() ? path : String.format("%s.%s", getPath(), path);
+        return StringUtils.isBlank(getPath()) ? path : String.format("%s.%s", getPath(), path);
     }
 
     protected void invalid(ResultCode resultCode) {
