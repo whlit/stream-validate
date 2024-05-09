@@ -1,6 +1,7 @@
 package cn.whlit.framework.validate;
 
 import cn.whlit.framework.ResultCode;
+import cn.whlit.framework.util.StringUtils;
 
 import java.util.function.BiConsumer;
 
@@ -38,32 +39,30 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator notEmpty() {
-        if (!isPresent() || val.isEmpty()) {
+        if (StringUtils.isEmpty(val)) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
         return this;
     }
 
     public StringValidator isEmpty() {
-        if (!isPresent() || val.isEmpty()) {
-            return this;
+        if (StringUtils.isNotEmpty(val)) {
+            invalid(ResultCode.ARG_MUST_EMPTY);
         }
-        invalid(ResultCode.ARG_MUST_EMPTY);
         return this;
     }
 
     public StringValidator notBlank() {
-        if (!isPresent() || val.trim().isEmpty()) {
+        if (StringUtils.isBlank(val)) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
         return this;
     }
 
     public StringValidator isBlank() {
-        if (!isPresent() || val.trim().isEmpty()) {
-            return this;
+        if (StringUtils.isNotBlank(val)) {
+            invalid(ResultCode.ARG_MUST_EMPTY);
         }
-        invalid(ResultCode.ARG_MUST_EMPTY);
         return this;
     }
 }
