@@ -49,7 +49,7 @@ public abstract class AbstractValidator<T> implements Validate {
         return getSelf();
     }
 
-    protected boolean isValid() {
+    protected boolean isPresent() {
         if (!preChecked) {
             notNull();
         }

@@ -38,14 +38,14 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator notEmpty() {
-        if (!isValid() || val.length() == 0) {
+        if (!isPresent() || val.isEmpty()) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
         return this;
     }
 
     public StringValidator isEmpty() {
-        if (!isValid() || val.length() == 0) {
+        if (!isPresent() || val.isEmpty()) {
             return this;
         }
         invalid(ResultCode.ARG_MUST_EMPTY);
@@ -53,14 +53,14 @@ public class StringValidator extends AbstractValidator<StringValidator> {
     }
 
     public StringValidator notBlank() {
-        if (!isValid() || val.trim().length() == 0) {
+        if (!isPresent() || val.trim().isEmpty()) {
             invalid(ResultCode.ARG_NOT_EMPTY);
         }
         return this;
     }
 
     public StringValidator isBlank() {
-        if (!isValid() || val.trim().length() == 0) {
+        if (!isPresent() || val.trim().isEmpty()) {
             return this;
         }
         invalid(ResultCode.ARG_MUST_EMPTY);

@@ -97,9 +97,7 @@ public class CollectionMethodGenerator implements MethodGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
-                .beginControlFlow("if (!isValid())")
-                .addStatement("return getSelf()")
-                .endControlFlow()
+                .beginControlFlow("if (isPresent())")
                 .addStatement("consumer.accept(new $T<$T, $T>(val.$N(), splicingPath($S), handler, (e, p) -> new $T(e, p, handler)))",
                         VALIDATOR,
                         subTypeValidator,
@@ -107,6 +105,7 @@ public class CollectionMethodGenerator implements MethodGenerator {
                         fieldMessage.getGetter().getMethodName(),
                         fieldMessage.getFieldName(),
                         subTypeValidator)
+                .endControlFlow()
                 .addStatement("return this")
                 .build();
     }

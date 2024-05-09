@@ -48,7 +48,7 @@ public class CollectionValidator<T, E> extends AbstractValidator<CollectionValid
     }
 
     public CollectionValidator<T, E> forEach(Consumer<T> consumer) {
-        if (!isValid()) {
+        if (!isPresent()) {
             return this;
         }
         AtomicInteger i = new AtomicInteger();

@@ -31,13 +31,12 @@ public class PrimitiveTypeMethodGenerator implements MethodGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(validatorClass)
                 .addParameter(CONSUMER, "consumer")
-                .beginControlFlow("if (!isValid())")
-                .addStatement("return getSelf()")
-                .endControlFlow()
+                .beginControlFlow("if (isPresent())")
                 .addStatement("consumer.accept(new $T(val.$N(), splicingPath($S), handler))",
                         VALIDATOR,
                         fieldMessage.getGetter().getMethodName(),
                         fieldMessage.getFieldName())
+                .endControlFlow()
                 .addStatement("return this")
                 .build();
     }
